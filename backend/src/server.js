@@ -25,3 +25,6 @@ if (ENV.NODE_ENV === 'production') {
 }
 
 app.listen(ENV.PORT, () => console.log('Server is running on port:', ENV.PORT))
+
+// 导出 app 供 Vercel 使用
+export default app
