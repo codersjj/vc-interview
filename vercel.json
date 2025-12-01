@@ -2,14 +2,14 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "frontend/dist",
   "functions": {
-    "backend/src/**/*.js": {
+    "backend/src/server.js": {
       "includeFiles": "frontend/dist/index.html"
     }
   },
   "rewrites": [
     {
-      "source": "/api/:path*",
-      "destination": "/backend/src/:path*.js"
+      "source": "/api/(.*)",
+      "destination": "/backend/src/server.js"
     },
     {
       "source": "/(.*)",
