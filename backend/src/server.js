@@ -14,7 +14,14 @@ app.get('/books', (req, res) => {
   res.status(200).json({ msg: 'this is the books endpoint' })
 })
 
-// ❗ 注意：不要写 app.listen()
-// Vercel 会自动创建 HTTP server 并调用你的 Express app
+// make our app ready for deployment
+if (ENV.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../frontend/dist')))
 
-export default app;   // <-- 必须导出 app
+  // see: https://expressjs.com/en/guide/migrating-5.html#path-syntax
+  app.get('/{*any}', (req, res) => {
+    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
+  })
+}
+
+app.listen(ENV.PORT, () => console.log('Server is running on port:', ENV.PORT))
