@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "outputDirectory": "frontend/dist",
   "functions": {
-    "backend/src/server.js": {
+    "api/index.js": {
       "includeFiles": "frontend/dist/index.html"
     }
   },
