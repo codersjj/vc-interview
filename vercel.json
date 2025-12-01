@@ -1,5 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "frontend/dist",
   "functions": {
     "api/index.js": {
       "includeFiles": "frontend/dist/index.html"
@@ -12,7 +13,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/frontend/dist/index.html"
+      "destination": "/index.html"
     }
   ],
   "cleanUrls": true
