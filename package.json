@@ -1,0 +1,21 @@
+{
+  "name": "vc-interview",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm install --prefix frontend && npm install --prefix backend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codersjj/vc-interview.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codersjj/vc-interview/issues"
+  },
+  "homepage": "https://github.com/codersjj/vc-interview#readme",
+  "description": ""
+}
