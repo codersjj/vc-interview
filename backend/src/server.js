@@ -6,11 +6,11 @@ const app = express()
 
 const __dirname = path.resolve()
 
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.status(200).json({ msg: 'api is up and running' })
 })
 
-app.get('/books', (req, res) => {
+app.get('/api/books', (req, res) => {
   res.status(200).json({ msg: 'this is the books endpoint' })
 })
 
