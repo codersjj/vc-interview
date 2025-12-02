@@ -32,7 +32,7 @@ const startServer = async () => {
     app.listen(ENV.PORT, () => console.log('Server is running on port:', ENV.PORT))
   } catch(error) {
     console.error('💥 Error starting the server:', error)
-    process.exit(1)
+    process.exit(1) // 0 means success, 1 means failure
   }
 }
 startServer()
