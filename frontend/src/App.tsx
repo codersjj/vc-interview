@@ -7,7 +7,7 @@ function App() {
       <h1>Welcome to VC Interview</h1>
       <SignedOut>
         <SignInButton mode="modal">
-          <button className=''>Sign in please</button>
+          <button className=''>Login</button>
         </SignInButton>
       </SignedOut>
       <SignedIn>
