@@ -1,5 +1,5 @@
 import { Inngest } from "inngest";
-import User from "../models/User";
+import User from "../models/User.js";
 
 // Create a client to send and receive events
 export const inngest = new Inngest({ id: "vc-interview" });
@@ -21,7 +21,7 @@ const syncUser = inngest.createFunction(
     
     await new User(newUser).save()
     console.log("✅ Synced user from Clerk to MongoDB:", newUser);
-    
+
     // todo: do sth else
   },
 );
