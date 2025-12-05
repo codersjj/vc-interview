@@ -20,7 +20,9 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use('/api/chat', chatRoutes)
 
 app.get('/health', (req, res) => {
-  console.log('auth:', req.auth())
+  if (ENV.NODE_ENV === 'development') {
+    console.log('auth:', req.auth())
+  }
   res.status(200).json({ message: 'api is up and running' })
 })
 
@@ -30,7 +32,9 @@ app.get('/books', (req, res) => {
 
 // when you pass an array of middleware to Express, it automatically flattens and executes them sequentially, one by one.
 app.get('/video-calls', protectRoute, (req, res) => {
-  console.log("🚀 ~ req.user:", req.user)
+  if (ENV.NODE_ENV === 'development') {
+    console.log("🚀 ~ req.user:", req.user)
+  }
   res.status(200).json({ message: 'video call endpoint' })
 })
 

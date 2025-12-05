@@ -10,7 +10,8 @@ if (!apiKey || !apiSecret) {
 }
 
 // see: https://getstream.io/chat/docs/node/
-export const serverClient = StreamChat.getInstance(apiKey, apiSecret);
+// Keep serverClient internal - only expose controlled operations
+const serverClient = StreamChat.getInstance(apiKey, apiSecret);
 
 export const upsertStreamUser = async userData => {
   try {
@@ -27,6 +28,18 @@ export const deleteStreamUser = async userId => {
     console.log('Stream user deleted successfully:', userId)
   } catch (error) {
     console.error('Error deleting Stream user:', error);
+  }
+}
+
+export const createUserToken = (userId) => {
+  try {
+    if (!userId) {
+      throw new Error('User ID is required to create token');
+    }
+    return serverClient.createToken(userId);
+  } catch (error) {
+    console.error('Error creating Stream token:', error);
+    throw error;
   }
 }
 
