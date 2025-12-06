@@ -1,8 +1,9 @@
+import { useEffect } from "react";
 import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { useUser } from "@clerk/clerk-react";
+import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
-import { useUser } from "@clerk/clerk-react";
-import { useEffect } from "react";
 
 function App() {
   const ProblemsPageWrapper = () => {
@@ -23,16 +24,20 @@ function App() {
   };
 
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route
-        path="/problems"
-        // element={isSignedIn ? <ProblemsPage /> : <Navigate to={"/"} />}
-        // It's recommended to avoid using this component in favor of useNavigate.
-        // see: https://reactrouter.com/api/components/Navigate#navigate
-        element={<ProblemsPageWrapper />}
-      />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/problems"
+          // element={isSignedIn ? <ProblemsPage /> : <Navigate to={"/"} />}
+          // It's recommended to avoid using this component in favor of useNavigate.
+          // see: https://reactrouter.com/api/components/Navigate#navigate
+          element={<ProblemsPageWrapper />}
+        />
+      </Routes>
+
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
+    </>
   );
 }
 
