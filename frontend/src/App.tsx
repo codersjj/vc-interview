@@ -1,5 +1,10 @@
 import { useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router";
+import {
+  // Navigate,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router";
 import { useUser } from "@clerk/clerk-react";
 import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
