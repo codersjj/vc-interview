@@ -81,6 +81,13 @@ export const executeCode = async (
 
     const data = await response.json();
 
+    if (!data.run) {
+      return {
+        success: false,
+        error: data.message || "Unexpected API response structure",
+      };
+    }
+
     const output = data.run.output || "";
     const stderr = data.run.stderr || "";
 

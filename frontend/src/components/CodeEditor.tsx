@@ -20,19 +20,25 @@ const CodeEditor = ({
   onCodeChange,
   onRunCode,
 }: CodeEditorProps) => {
+  // Safely get the language config with fallback to JavaScript
+  const safeConfig = LANGUAGE_CONFIG[selectedLanguage] !== undefined
+    ? LANGUAGE_CONFIG[selectedLanguage]
+    : LANGUAGE_CONFIG.javascript;
+
   return (
     <div className="flex flex-col h-full bg-base-300">
       <div className="flex justify-between items-center px-4 py-3 bg-base-100 border-t border-base-300">
         <div className="flex items-center gap-3">
           <img
-            src={LANGUAGE_CONFIG[selectedLanguage].icon}
-            alt={LANGUAGE_CONFIG[selectedLanguage].name}
+            src={safeConfig.icon}
+            alt={safeConfig.name}
             className="size-6"
           />
           <select
             className="select select-sm"
             value={selectedLanguage}
             onChange={onLanguageChange}
+            aria-label="Select programming language"
           >
             {Object.entries(LANGUAGE_CONFIG).map(([key, lang]) => (
               <option key={key} value={key}>
@@ -60,7 +66,7 @@ const CodeEditor = ({
       <div className="flex-1 overflow-hidden">
         <Editor
           height={"100%"}
-          language={LANGUAGE_CONFIG[selectedLanguage].monacoLang}
+          language={safeConfig.monacoLang}
           value={code}
           theme="vs-dark"
           onChange={onCodeChange}

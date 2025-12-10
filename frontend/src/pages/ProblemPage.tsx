@@ -14,9 +14,7 @@ const ProblemPage = () => {
   const { id: problemId } = useParams();
   const navigate = useNavigate();
 
-  console.time("get allProblems");
   const allProblems = Object.values(PROBLEMS);
-  console.timeEnd("get allProblems");
   const problem = problemId
     ? PROBLEMS[problemId as keyof typeof PROBLEMS]
     : null;
@@ -41,7 +39,7 @@ const ProblemPage = () => {
     navigate(`/problem/${newProblemId}`);
     setCode(
       PROBLEMS[newProblemId as keyof typeof PROBLEMS].starterCode[
-      selectedLanguage
+        selectedLanguage
       ]
     );
     setOutput(null);

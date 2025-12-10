@@ -105,14 +105,14 @@ const ProblemDescription = ({
         {/* constrains */}
         <div className="p-4 bg-base-100 rounded-xl border border-base-300 shadow-sm shadow-base-300">
           <h2 className="mb-4 text-xl text-base-content font-bold">
-            Constrains
+            Constraints
           </h2>
           <ul className="space-y-2">
-            {problem.constraints.map((constrain, idx) => (
+            {problem.constraints.map((constraint, idx) => (
               <li key={idx} className="flex items-center gap-2">
                 <span className="text-primary">·</span>
                 <span className="text-sm text-base-content/80">
-                  {constrain}
+                  {constraint}
                 </span>
               </li>
             ))}
