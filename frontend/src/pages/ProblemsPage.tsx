@@ -2,11 +2,8 @@ import { Link } from "react-router";
 import { ChevronRightIcon, Code2Icon } from "lucide-react";
 import NavBar from "../components/NavBar";
 import { PROBLEMS } from "../data/problems";
-import {
-  getDifficultyBadgeClass,
-  DIFFICULTY,
-  type Difficulty,
-} from "../lib/utils";
+import { getDifficultyBadgeClass } from "../lib/utils";
+import { type Difficulty, DIFFICULTY } from "../types";
 
 const ProblemsPage = () => {
   const problems = Object.values(PROBLEMS);

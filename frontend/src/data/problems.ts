@@ -1,4 +1,33 @@
-export const PROBLEMS = {
+import { type Difficulty } from "../types";
+
+export interface Problem {
+  id: string;
+  title: string;
+  difficulty: Difficulty;
+  category: string;
+  description: {
+    text: string;
+    notes: string[];
+  };
+  examples: {
+    input: string;
+    output: string;
+    explanation?: string;
+  }[];
+  constraints: string[];
+  starterCode: {
+    javascript: string;
+    python: string;
+    java: string;
+  };
+  expectedOutput: {
+    javascript: string;
+    python: string;
+    java: string;
+  };
+}
+
+export const PROBLEMS: Record<string, Problem> = {
   "two-sum": {
     id: "two-sum",
     title: "Two Sum",

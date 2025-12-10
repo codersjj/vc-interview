@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/HomePage";
 import ProblemsPage from "./pages/ProblemsPage";
 import DashboardPage from "./pages/DashboardPage";
+import ProblemPage from "./pages/ProblemPage";
 
 function App() {
   const { isSignedIn, isLoaded } = useUser();
@@ -46,6 +47,10 @@ function App() {
           // It's recommended to avoid using this component in favor of useNavigate.
           // see: https://reactrouter.com/api/components/Navigate#navigate
           element={<ProblemsPageWrapper />}
+        />
+        <Route
+          path="/problem/:id"
+          element={isSignedIn ? <ProblemPage /> : <Navigate to={"/"} />}
         />
       </Routes>
 

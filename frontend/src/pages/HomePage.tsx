@@ -233,7 +233,9 @@ const HomePage = () => {
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold mb-4">
             Everything You Need to{" "}
-            <span className="text-primary font-mono text-[2.5rem]">Succeed</span>
+            <span className="text-primary font-mono text-[2.5rem]">
+              Succeed
+            </span>
           </h2>
           <p className="mx-auto max-w-2xl text-lg text-base-content/70">
             Powerful features designed to make your coding interviews seamless
