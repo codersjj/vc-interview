@@ -12,3 +12,7 @@ export const getDifficultyBadgeClass = (difficulty: Difficulty) => {
       return "badge-ghost";
   }
 };
+
+export const toCapitalize = (value: string) => {
+  return value.slice(0, 1).toUpperCase() + value.slice(1);
+};
