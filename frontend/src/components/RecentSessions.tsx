@@ -67,7 +67,6 @@ const RecentSessions = ({ sessions, isLoading }: RecentSessionsProps) => {
                       </span>
                     </div>
                   </div>
-
                   <div className="space-y-2 text-sm opacity-80 mb-4">
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4" />
@@ -85,15 +84,14 @@ const RecentSessions = ({ sessions, isLoading }: RecentSessionsProps) => {
                       </span>
                     </div>
                   </div>
-
                   <div className="flex items-center justify-between pt-3 border-t border-base-300">
                     <span className="text-xs font-semibold opacity-80 uppercase">
-                      Completed
+                      {session.status === "active" ? "Active" : "Completed"}
                     </span>
                     <span className="text-xs opacity-40">
                       {new Date(session.updatedAt).toLocaleDateString()}
                     </span>
-                  </div>
+                  </div>{" "}
                 </div>
               </div>
             ))

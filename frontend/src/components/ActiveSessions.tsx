@@ -89,10 +89,16 @@ const ActiveSessions = ({
                             {session.participant ? "2/2" : "1/2"}
                           </span>
                         </div>
-                        {session.participant && !isUserInSession(session) ? (
-                          <span className="badge badge-error badge-sm">
-                            FULL
-                          </span>
+                        {session.participant ? (
+                          isUserInSession(session) ? (
+                            <span className="badge badge-info badge-sm">
+                              JOINED
+                            </span>
+                          ) : (
+                            <span className="badge badge-error badge-sm">
+                              FULL
+                            </span>
+                          )
                         ) : (
                           <span className="badge badge-success badge-sm">
                             OPEN

@@ -33,7 +33,8 @@ export const useMyRecentSessions = () => {
 
 export const useSessionById = (id: string) => {
   const result = useQuery({
-    queryKey: ["session"],
+    // see: https://tanstack.com/query/latest/docs/framework/react/guides/query-keys#if-your-query-function-depends-on-a-variable-include-it-in-your-query-key
+    queryKey: ["session", id],
     queryFn: () => sessionApi.getSessionsById(id),
     enabled: !!id,
     refetchInterval: 5000, // refetch every 5 seconds to detect session status changes
@@ -41,7 +42,6 @@ export const useSessionById = (id: string) => {
 
   return result;
 };
-
 export const useJoinSession = (id: string) => {
   const result = useMutation({
     mutationKey: ["joinSession"],

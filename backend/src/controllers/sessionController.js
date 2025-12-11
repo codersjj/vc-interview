@@ -65,10 +65,14 @@ export const createSession = async (req, res) => {
         );
       } catch (chatError) {
         // Rollback video call if chat channel creation failed
-        await deleteVideoCall("default", callId, true);
-        console.log(
-          "Rolled back video call due to chat channel creation failure"
-        );
+        try {
+          await deleteVideoCall("default", callId, true);
+          console.log(
+            "Rolled back video call due to chat channel creation failure"
+          );
+        } catch (rollbackError) {
+          console.error("Failed to rollback video call:", rollbackError);
+        }
         throw chatError;
       }
 
@@ -78,13 +82,17 @@ export const createSession = async (req, res) => {
         console.log("Session created with ID:", session._id);
       } catch (dbError) {
         // Rollback both Stream resources if DB save failed
-        await Promise.all([
-          deleteChatChannel("messaging", callId),
-          deleteVideoCall("default", callId, true),
-        ]);
-        console.log(
-          "Rolled back Stream resources due to database save failure"
-        );
+        try {
+          await Promise.all([
+            deleteChatChannel("messaging", callId),
+            deleteVideoCall("default", callId, true),
+          ]);
+          console.log(
+            "Rolled back Stream resources due to database save failure"
+          );
+        } catch (rollbackError) {
+          console.error("Failed to rollback Stream resources:", rollbackError);
+        }
         throw dbError;
       }
     } catch (error) {

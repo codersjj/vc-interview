@@ -10,7 +10,7 @@ export type Session = {
   _id: string;
   callId: string;
   problem: string;
-  difficulty: "easy" | "medium" | "hard";
+  difficulty: Lowercase<Difficulty>;
   host: {
     _id: string;
     email: string;

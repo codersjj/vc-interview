@@ -45,7 +45,7 @@ const CreateSessionModal = ({
           <div className="space-y-2">
             <label htmlFor="problem_select" className="label">
               <span className="text-lg font-semibold text-base-content/80">
-                Select Problems
+                Select Problem
               </span>
               <span className="text-error font-bold">*</span>
             </label>

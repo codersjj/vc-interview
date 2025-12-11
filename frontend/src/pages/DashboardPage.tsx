@@ -26,7 +26,6 @@ const DashboardPage = () => {
     useActiveSessions();
 
   const activeSessions = activeSessionsData?.sessions || [];
-  console.log("🚀 ~ DashboardPage ~ activeSessions:", activeSessions);
 
   const { isPending: isMyRecentSessionsPending, data: myRecentSessionsData } =
     useMyRecentSessions();

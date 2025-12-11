@@ -1,10 +1,9 @@
-import { Link } from "react-router";
 import { ChevronRightIcon, Code2Icon } from "lucide-react";
+import { Link } from "react-router";
 import NavBar from "../components/NavBar";
 import { PROBLEMS } from "../data/problems";
 import { getDifficultyBadgeClass } from "../lib/utils";
 import { type Difficulty, DIFFICULTY } from "../types";
-import { useActiveSessions } from "../hooks/useSessions";
 
 const ProblemsPage = () => {
   const problems = Object.values(PROBLEMS);
@@ -18,20 +17,6 @@ const ProblemsPage = () => {
   const hardProblemCount = problems.filter(
     (problem) => problem.difficulty === DIFFICULTY.HARD
   ).length;
-
-  const {
-    isPending,
-    isError,
-    data: activeSessions,
-    error,
-  } = useActiveSessions();
-  console.log(
-    "🚀 ~ ProblemsPage ~ isPending, isError, activeSessions, error:",
-    isPending,
-    isError,
-    activeSessions,
-    error
-  );
 
   return (
     <div className="min-h-screen bg-base-200">
