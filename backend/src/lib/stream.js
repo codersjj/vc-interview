@@ -13,9 +13,11 @@ if (!apiKey || !apiSecret) {
 // see: https://getstream.io/chat/docs/node/
 // Keep chatClient internal - only expose controlled operations
 // will be used for chat messaging
-const chatClient = StreamChat.getInstance(apiKey, apiSecret);
+const chatClient = StreamChat.getInstance(apiKey, apiSecret, {
+  timeout: 20000,
+});
 // will be used for video calls
-const streamClient = new StreamClient(apiKey, apiSecret);
+const streamClient = new StreamClient(apiKey, apiSecret, { timeout: 20000 });
 
 export const upsertStreamUser = async (userData) => {
   try {
@@ -55,7 +57,7 @@ export const createVideoCall = async (
 ) => {
   try {
     if (!callType || !callId || !createdById) {
-      throw new Error('callType, callId, and createdById are required');
+      throw new Error("callType, callId, and createdById are required");
     }
     const call = streamClient.video.call(callType, callId);
     await call.getOrCreate({
@@ -116,7 +118,7 @@ export const addMemberToChannel = async (channelType, channelId, userId) => {
 export const deleteChatChannel = async (channelType, channelId) => {
   try {
     if (!channelType || !channelId) {
-      throw new Error('channelType and channelId are required');
+      throw new Error("channelType and channelId are required");
     }
     const channel = chatClient.channel(channelType, channelId);
     const destroy = await channel.delete();

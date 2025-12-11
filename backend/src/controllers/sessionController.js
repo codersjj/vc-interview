@@ -10,6 +10,11 @@ import {
 export const createSession = async (req, res) => {
   try {
     const { problem, difficulty } = req.body;
+    console.log(
+      "🚀 ~ createSession ~ problem, difficulty:",
+      problem,
+      difficulty
+    );
 
     if (!problem || !difficulty) {
       return res
@@ -39,25 +44,61 @@ export const createSession = async (req, res) => {
       callId,
     });
 
-    // create stream video call
-    await createVideoCall("default", callId, clerkId, {
-      problem,
-      difficulty,
-      sessionId: session._id.toString(),
-    });
+    // create stream resources and save to DB with proper rollback handling
+    // ensures transaction consistency across Stream and MongoDB
+    try {
+      // Step 1: Create video call
+      await createVideoCall("default", callId, clerkId, {
+        problem,
+        difficulty,
+        sessionId: session._id.toString(),
+      });
 
-    // chat messaging
-    await createChatChannel(
-      "messaging",
-      callId,
-      clerkId,
-      `${problem} Session`,
-      [clerkId]
-    );
+      // Step 2: Create chat channel
+      try {
+        await createChatChannel(
+          "messaging",
+          callId,
+          clerkId,
+          `${problem} Session`,
+          [clerkId]
+        );
+      } catch (chatError) {
+        // Rollback video call if chat channel creation failed
+        try {
+          await deleteVideoCall("default", callId, true);
+          console.log(
+            "Rolled back video call due to chat channel creation failure"
+          );
+        } catch (rollbackError) {
+          console.error("Failed to rollback video call:", rollbackError);
+        }
+        throw chatError;
+      }
 
-    // save session to db
-    await session.save();
-    console.log("Session created with ID:", session._id);
+      // Step 3: Save session to database
+      try {
+        await session.save();
+        console.log("Session created with ID:", session._id);
+      } catch (dbError) {
+        // Rollback both Stream resources if DB save failed
+        try {
+          await Promise.all([
+            deleteChatChannel("messaging", callId),
+            deleteVideoCall("default", callId, true),
+          ]);
+          console.log(
+            "Rolled back Stream resources due to database save failure"
+          );
+        } catch (rollbackError) {
+          console.error("Failed to rollback Stream resources:", rollbackError);
+        }
+        throw dbError;
+      }
+    } catch (error) {
+      // Re-throw to be caught by outer catch block
+      throw error;
+    }
 
     res.status(201).json({ session });
   } catch (error) {
@@ -70,6 +111,7 @@ export const getActiveSessions = async (_, res) => {
   try {
     const sessions = await Session.find({ status: "active" })
       .populate("host", "name email profileImage clerkId")
+      .populate("participant", "name email profileImage clerkId")
       .sort({ createdAt: -1 })
       .limit(20);
 
