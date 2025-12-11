@@ -29,9 +29,9 @@ const CreateSessionModal = ({
   if (!isOpen) return null;
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedProblem = problems.find((p) => p.id === e.target.value);
+    const selectedProblem = problems.find((p) => p.title === e.target.value);
     setRoomConfig({
-      problem: selectedProblem?.id || "",
+      problem: selectedProblem?.title || "",
       difficulty: selectedProblem?.difficulty || "",
     });
   };
@@ -59,7 +59,7 @@ const CreateSessionModal = ({
                 Choose a coding problem...
               </option>
               {problems.map((problem) => (
-                <option key={problem.id} value={problem.id}>
+                <option key={problem.id} value={problem.title}>
                   {problem.title} ({problem.difficulty})
                 </option>
               ))}
