@@ -1,31 +1,19 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import toast from "react-hot-toast";
-import confetti from "canvas-confetti";
-import NavBar from "../components/NavBar";
-import ProblemDescription from "../components/ProblemDescription";
-import { executeCode, LANGUAGE, type Result } from "../lib/piston";
-import { PROBLEMS } from "../data/problems";
+import { useParams } from "react-router";
 import CodeEditor from "../components/CodeEditor";
+import NavBar from "../components/NavBar";
 import OutputPanel from "../components/OutputPanel";
+import ProblemDescription from "../components/ProblemDescription";
+import { PROBLEMS } from "../data/problems";
+import useCodeRunning from "../hooks/useCodeRunning";
 
 const ProblemPage = () => {
   const { id: problemId } = useParams();
-  const navigate = useNavigate();
 
   const allProblems = Object.values(PROBLEMS);
   const problem = problemId
     ? PROBLEMS[problemId as keyof typeof PROBLEMS]
     : null;
-
-  const [selectedLanguage, setSelectedLanguage] = useState<LANGUAGE>(
-    LANGUAGE.JavaScript
-  );
-  const initialCode = problem?.starterCode[selectedLanguage];
-  const [code, setCode] = useState<string | undefined>(initialCode);
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const [output, setOutput] = useState<Result | null>(null);
 
   // update problem when URL params changes
   // useEffect(() => {
@@ -35,93 +23,16 @@ const ProblemPage = () => {
   //   }
   // }, [id, problem, selectedLanguage]);
 
-  const handleProblemChange = (newProblemId: string) => {
-    navigate(`/problem/${newProblemId}`);
-    setCode(
-      PROBLEMS[newProblemId as keyof typeof PROBLEMS].starterCode[
-        selectedLanguage
-      ]
-    );
-    setOutput(null);
-  };
-
-  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const newLang = e.target.value as LANGUAGE;
-    setSelectedLanguage(newLang);
-    setCode(problem?.starterCode[newLang]);
-    setOutput(null);
-  };
-
-  const handleRunCode = async () => {
-    setIsRunning(true);
-    setOutput(null);
-
-    const res = await executeCode(selectedLanguage, code ?? "");
-
-    setOutput(res);
-    setIsRunning(false);
-
-    // check if code executed successfully and matches the expected output
-    if (res.success) {
-      const expectedOutput = problem?.expectedOutput[selectedLanguage];
-      const testsPassed = checkIfTestsPassed(
-        res.output ?? "",
-        expectedOutput ?? ""
-      );
-
-      if (testsPassed) {
-        toast.success("All tests passed! Great job!");
-        triggerConfetti();
-      } else {
-        toast.error("Tests failed. Check your output.");
-      }
-    } else {
-      toast.error("Code execution failed!");
-    }
-  };
-
-  const checkIfTestsPassed = (
-    actualOutput: string,
-    expectedOutput: string
-  ): boolean => {
-    return normalizeOutput(actualOutput) === normalizeOutput(expectedOutput);
-  };
-
-  const normalizeOutput = (output: string) => {
-    return output
-      .trim()
-      .split("\n")
-      .map((line) =>
-        line
-          .trim()
-          // remove spaces after [ or before ]
-          .replace(/\[\s+/g, "[")
-          .replace(/\s+\]/g, "]")
-          // normalize spaces around commas to single space after comma
-          .replace(/\s*,\s*/g, ", ")
-      )
-      .filter((line) => line.length > 0)
-      .join("\n");
-  };
-
-  const triggerConfetti = () => {
-    confetti({
-      particleCount: 80,
-      spread: 250,
-      origin: {
-        x: 0.2,
-        y: 0.4,
-      },
-    });
-    confetti({
-      particleCount: 80,
-      spread: 250,
-      origin: {
-        x: 0.8,
-        y: 0.4,
-      },
-    });
-  };
+  const {
+    selectedLanguage,
+    code,
+    isRunning,
+    output,
+    setCode,
+    handleProblemChange,
+    handleLanguageChange,
+    handleRunCode,
+  } = useCodeRunning(problem);
 
   return (
     <div className="flex flex-col h-screen bg-base-300">
