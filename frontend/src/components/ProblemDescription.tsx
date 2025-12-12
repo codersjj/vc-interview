@@ -87,7 +87,7 @@ const ProblemDescription = ({
             {session && (
               <div className="mt-2 text-base-content/60">
                 <span>
-                  Host: {session.host.name || "Loading..."} ·{" "}
+                  Host: {session.host.name || "Unknown"} ·{" "}
                   {session.participant ? 2 : 1}/2 participants
                 </span>
               </div>

@@ -42,6 +42,7 @@ export const useSessionById = (id: string) => {
 
   return result;
 };
+
 export const useJoinSession = () => {
   const result = useMutation({
     mutationKey: ["joinSession"],

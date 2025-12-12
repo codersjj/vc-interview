@@ -24,9 +24,8 @@ const SessionPage = () => {
     data: sessionData,
     refetch: refetchSession,
   } = useSessionById(sessionId!);
-  console.log("🚀 ~ SessionPage ~ sessionData:", sessionData);
 
-  const joinSessionMutation = useJoinSession();
+  const { mutate: joinSessionMutate } = useJoinSession();
   const endSessionMutation = useEndSession();
 
   const session = sessionData?.session;
@@ -37,7 +36,6 @@ const SessionPage = () => {
   const problem = session?.problem
     ? Object.values(PROBLEMS).find((p) => p.title === session.problem)
     : null;
-  console.log("🚀 ~ SessionPage ~ problem:", problem);
 
   const {
     selectedLanguage,
@@ -61,7 +59,7 @@ const SessionPage = () => {
   useEffect(() => {
     if (!isUserLoaded || !user || isSessionPending || !session) return;
     if (isHost || isParticipant) return;
-    joinSessionMutation.mutate(sessionId!, {
+    joinSessionMutate(sessionId!, {
       onSuccess: () => {
         refetchSession();
       },
@@ -74,7 +72,9 @@ const SessionPage = () => {
     isHost,
     isParticipant,
     sessionId,
-    joinSessionMutation,
+    // Disallow putting the result of query hooks directly in a React hook dependency array
+    // see: https://tanstack.com/query/latest/docs/eslint/no-unstable-deps
+    joinSessionMutate,
     refetchSession,
   ]);
 

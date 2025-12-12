@@ -25,12 +25,13 @@ const useCodeRunning = (problem: Problem | null | undefined) => {
   }
 
   const handleProblemChange = (newProblemId: string) => {
+    const newProblem = PROBLEMS[newProblemId as keyof typeof PROBLEMS];
+    if (!newProblem) {
+      console.error(`Problem ${newProblemId} not found`);
+      return;
+    }
     navigate(`/problem/${newProblemId}`);
-    setCode(
-      PROBLEMS[newProblemId as keyof typeof PROBLEMS].starterCode[
-        selectedLanguage
-      ]
-    );
+    setCode(newProblem.starterCode[selectedLanguage]);
     setOutput(null);
   };
 
