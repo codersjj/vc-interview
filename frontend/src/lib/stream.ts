@@ -20,7 +20,6 @@ export const initializeStreamVideoClient = async (
 
   initializationPromise = (async () => {
     console.log("client", client);
-    console.log("client?.user?.id", client?.user?.id);
     console.log(
       "client?.state.connectedUser?.id",
       client?.state.connectedUser?.id
