@@ -31,7 +31,7 @@ const useCodeRunning = (problem: Problem | null | undefined) => {
       return;
     }
     navigate(`/problem/${newProblemId}`);
-    setCode(newProblem.starterCode[selectedLanguage]);
+    setCode(newProblem.starterCode[selectedLanguage] || "");
     setOutput(null);
   };
 

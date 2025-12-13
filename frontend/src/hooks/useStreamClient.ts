@@ -210,6 +210,11 @@ const useStreamClient = (
       } catch (error) {
         toast.error("Failed to join video call");
         console.error("Error init call", error);
+        // Clean up sessionStorage marker so user can retry
+        if (session?.callId) {
+          const sessionKey = `stream_call_joined_${session.callId}`;
+          sessionStorage.removeItem(sessionKey);
+        }
       } finally {
         if (isMountedRef.current) {
           setIsInitializingCall(false);

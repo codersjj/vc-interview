@@ -34,7 +34,7 @@ const VideoCallAndChat = ({
             <p className="text-lg">Connecting to video call...</p>
           </div>
         </div>
-      ) : !videoClient || !chatClient ? (
+      ) : !videoClient || !chatClient || !call || !channel ? (
         <div className="flex justify-center items-center h-full">
           <div className="card max-w-md bg-base-100 shadow-xl">
             <div className="card-body flex items-center text-center">
