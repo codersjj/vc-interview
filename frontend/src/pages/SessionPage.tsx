@@ -13,6 +13,8 @@ import {
 import ProblemDescription from "../components/ProblemDescription";
 import CodeEditor from "../components/CodeEditor";
 import OutputPanel from "../components/OutputPanel";
+import useStreamClient from "../hooks/useStreamClient";
+import VideoCallAndChat from "../components/VideoCallAndChat";
 
 const SessionPage = () => {
   const navigate = useNavigate();
@@ -46,6 +48,15 @@ const SessionPage = () => {
     handleLanguageChange,
     handleRunCode,
   } = useCodeRunning(problem);
+
+  const {
+    call,
+    channel,
+    chatClient,
+    isInitializingCall,
+    videoClient,
+    handleLeaveCall,
+  } = useStreamClient(session, isSessionPending, isHost, isParticipant);
 
   // redirect the participant when session ends
   useEffect(() => {
@@ -141,7 +152,14 @@ const SessionPage = () => {
 
           {/* RIGHT PANEL - VIDEO CALLS & CHAT */}
           <Panel defaultSize={50} minSize={30}>
-            RIGHT PANEL - VIDEO CALLS & CHAT
+            <VideoCallAndChat
+              call={call}
+              channel={channel}
+              chatClient={chatClient}
+              isInitializingCall={isInitializingCall}
+              videoClient={videoClient}
+              onLeaveCall={handleLeaveCall}
+            />
           </Panel>
         </PanelGroup>
       </div>
