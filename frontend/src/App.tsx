@@ -1,35 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { useUser } from "@clerk/clerk-react";
+import { Toaster } from "react-hot-toast";
+import HomePage from "./pages/HomePage";
+import ProblemsPage from "./pages/ProblemsPage";
+import DashboardPage from "./pages/DashboardPage";
+import ProblemPage from "./pages/ProblemPage";
+import SessionPage from "./pages/SessionPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isSignedIn, isLoaded } = useUser();
+
+  const ProblemsPageWrapper = () => {
+    const { isSignedIn, isLoaded } = useUser();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      if (isLoaded && !isSignedIn) {
+        navigate("/", { replace: true });
+      }
+    }, [isLoaded, isSignedIn, navigate]);
+
+    if (!isLoaded) {
+      return <div>Loading...</div>;
+    }
+
+    return isSignedIn ? <ProblemsPage /> : null;
+  };
+
+  // this will get rid of flickering effect
+  if (!isLoaded) return null;
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route
+          path="/"
+          element={isSignedIn ? <Navigate to="/dashboard" /> : <HomePage />}
+        />
+        <Route
+          path="/dashboard"
+          element={isSignedIn ? <DashboardPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/problems"
+          // element={isSignedIn ? <ProblemsPage /> : <Navigate to={"/"} />}
+          // It's recommended to avoid using this component in favor of useNavigate.
+          // see: https://reactrouter.com/api/components/Navigate#navigate
+          element={<ProblemsPageWrapper />}
+        />
+        <Route
+          path="/problem/:id"
+          element={isSignedIn ? <ProblemPage /> : <Navigate to={"/"} />}
+        />
+        <Route
+          path="/session/:id"
+          element={isSignedIn ? <SessionPage /> : <Navigate to={"/"} />}
+        />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

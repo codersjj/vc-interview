@@ -1,3 +1,9 @@
 node_modules
 .env
 .DS_Store
+.vscode/
+
+# Test artifacts
+playwright-report/
+test-results/
+coverage/

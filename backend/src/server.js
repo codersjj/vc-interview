@@ -1,36 +1,78 @@
-import path from 'path'
-import express from "express"
-import { ENV } from "./lib/env.js"
+import path from "path";
+import express from "express";
+import { serve } from "inngest/express";
+import { clerkMiddleware } from "@clerk/express";
+import cors from "cors";
+import { ENV } from "./lib/env.js";
+import { connectDB } from "./lib/db.js";
+import { inngest, functions } from "./lib/inngest.js";
+import { protectRoute } from "./middleware/protectRoute.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import sessionRoutes from "./routes/sessionRoutes.js";
 
-const app = express()
+export const app = express();
 
-const __dirname = path.resolve()
+const __dirname = path.resolve();
 
-app.get('/api/health', (req, res) => {
-  res.status(200).json({ msg: 'api is up and running' })
-})
+// Important: ensure you add JSON middleware to process incoming JSON POST payloads.
+app.use(express.json());
+// credentials: true => server allows a browser to include cookies on request
+// see:
+// https://www.npmjs.com/package/cors#configuration-options
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Access-Control-Allow-Credentials
+// https://developer.mozilla.org/en-US/docs/Web/API/RequestInit#credentials
+app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(clerkMiddleware()); // this adds auth field to request object: req.auth()
+// Set up the "/api/inngest" (recommended) routes with the serve handler
+app.use("/api/inngest", serve({ client: inngest, functions }));
+app.use("/api/chat", chatRoutes);
+app.use("/api/sessions", sessionRoutes);
 
-app.get('/api/books', (req, res) => {
-  res.status(200).json({ msg: 'this is the books endpoint' })
-})
+app.get("/api/health", (req, res) => {
+  if (ENV.NODE_ENV === "development") {
+    console.log("auth:", req.auth());
+  }
+  res.status(200).json({ message: "api is up and running" });
+});
 
+app.get("/api/books", (req, res) => {
+  res.status(200).json({ message: "this is the books endpoint" });
+});
 
-// And for development only start the server if we're not in a serverless environment
-// This will only happen locally in development mode
-if (ENV.NODE_ENV !== 'production') {
-  // Serve static files from the dist directory
-  app.use(express.static(path.join(__dirname, '../frontend/dist')))
+// when you pass an array of middleware to Express, it automatically flattens and executes them sequentially, one by one.
+app.get("/api/video-calls", protectRoute, (req, res) => {
+  if (ENV.NODE_ENV === "development") {
+    console.log("🚀 ~ req.user:", req.user);
+  }
+  res.status(200).json({ message: "video call endpoint" });
+});
+
+// make our app ready for deployment
+if (ENV.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   // Serve index.html for all other requests
   // see: https://expressjs.com/en/guide/migrating-5.html#path-syntax
-  app.get('/{*any}', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'))
-  })
-
-  // Start the server
-  app.listen(ENV.PORT, () => console.log('Server is running on port:', ENV.PORT))
+  app.get("/{*any}", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
+  });
 }
 
+const startServer = async () => {
+  try {
+    await connectDB();
+    app.listen(ENV.PORT, () =>
+      console.log("Server is running on port:", ENV.PORT)
+    );
+  } catch (error) {
+    console.error("💥 Error starting the server:", error);
+    process.exit(1); // 0 means success, 1 means failure
+  }
+};
+
+if (ENV.NODE_ENV !== "test") {
+  startServer();
+}
 
 // 导出 app 供 Vercel 使用
 export default app
