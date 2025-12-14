@@ -28,19 +28,19 @@ app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use("/api/chat", chatRoutes);
 app.use("/api/sessions", sessionRoutes);
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   if (ENV.NODE_ENV === "development") {
     console.log("auth:", req.auth());
   }
   res.status(200).json({ message: "api is up and running" });
 });
 
-app.get("/books", (req, res) => {
+app.get("/api/books", (req, res) => {
   res.status(200).json({ message: "this is the books endpoint" });
 });
 
 // when you pass an array of middleware to Express, it automatically flattens and executes them sequentially, one by one.
-app.get("/video-calls", protectRoute, (req, res) => {
+app.get("/api/video-calls", protectRoute, (req, res) => {
   if (ENV.NODE_ENV === "development") {
     console.log("🚀 ~ req.user:", req.user);
   }
@@ -51,6 +51,7 @@ app.get("/video-calls", protectRoute, (req, res) => {
 if (ENV.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
+  // Serve index.html for all other requests
   // see: https://expressjs.com/en/guide/migrating-5.html#path-syntax
   app.get("/{*any}", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
@@ -72,3 +73,6 @@ const startServer = async () => {
 if (ENV.NODE_ENV !== "test") {
   startServer();
 }
+
+// 导出 app 供 Vercel 使用
+export default app
