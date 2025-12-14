@@ -49,14 +49,8 @@ const SessionPage = () => {
     handleRunCode,
   } = useCodeRunning(problem);
 
-  const {
-    call,
-    channel,
-    chatClient,
-    isInitializingCall,
-    videoClient,
-    handleLeaveCall,
-  } = useStreamClient(session, isSessionPending, isHost, isParticipant);
+  const { call, channel, chatClient, isInitializingCall, videoClient } =
+    useStreamClient(session, isSessionPending, isHost, isParticipant);
 
   // redirect the participant when session ends
   useEffect(() => {
@@ -158,7 +152,6 @@ const SessionPage = () => {
               chatClient={chatClient}
               isInitializingCall={isInitializingCall}
               videoClient={videoClient}
-              onLeaveCall={handleLeaveCall}
             />
           </Panel>
         </PanelGroup>

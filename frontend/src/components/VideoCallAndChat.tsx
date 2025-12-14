@@ -14,7 +14,7 @@ interface VideoCallAndChatProps {
   chatClient: StreamChat | null;
   isInitializingCall: boolean;
   videoClient: StreamVideoClient | null;
-  onLeaveCall: () => Promise<void>;
+  onLeaveCall?: () => Promise<void>;
 }
 
 const VideoCallAndChat = ({
