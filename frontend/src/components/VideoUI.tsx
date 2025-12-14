@@ -24,7 +24,7 @@ import "stream-chat-react/dist/css/v2/index.css";
 interface VideoUIProps {
   chatClient: StreamChat | null;
   channel: ChatChannelType | null;
-  onLeaveCall: () => Promise<void>;
+  onLeaveCall?: () => Promise<void>;
 }
 
 const VideoUI = ({ chatClient, channel, onLeaveCall }: VideoUIProps) => {
@@ -81,7 +81,7 @@ const VideoUI = ({ chatClient, channel, onLeaveCall }: VideoUIProps) => {
           <CallControls
             onLeave={async () => {
               // First properly cleanup via our handler, then navigate
-              await onLeaveCall();
+              if (onLeaveCall) await onLeaveCall();
               navigate("/dashboard");
             }}
           />
